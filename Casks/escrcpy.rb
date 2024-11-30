@@ -1,9 +1,9 @@
 cask "escrcpy" do
   arch arm: "arm64", intel: "x64"
 
-  version "1.27.4"
-  sha256 arm:   "xxx",
-         intel: "xxx"
+  version "1.27.5"
+  sha256 arm:   "f6df28f6946da3f38a23ab92261ba667b5219296172918f9bd206975ab3eec3b",
+         intel: "f6df28f6946da3f38a23ab92261ba667b5219296172918f9bd206975ab3eec3b"
 
   url "https://github.com/viarotel-org/escrcpy/releases/download/v#{version}/Escrcpy-#{version}-mac-#{arch}.dmg"
   name "Escrcpy"
@@ -23,28 +23,28 @@ cask "escrcpy" do
 
   postflight do
     app_path = "/Applications/Escrcpy.app"
-    
+
     unless File.exist?(app_path)
       opoo "Application not found at #{app_path}"
       return
     end
-    
+
     xattr_path = `which xattr`.chomp
-    quarantine_status = system_command(xattr_path, 
-                                     args: ["-l", app_path],
-                                     print_stderr: false).stdout
+    quarantine_status = system_command(xattr_path,
+                                       args:         ["-l", app_path],
+                                       print_stderr: false).stdout
     if quarantine_status.include?("com.apple.quarantine")
       puts "\n============================================="
       puts "Would you like to remove the quarantine attribute to fix the app damage issue?"
       puts "This will prevent the 'app is damaged' warning."
       puts "Enter 'Y' or press Enter to proceed, 'n' to skip"
       puts "============================================="
-      
-      input = STDIN.gets.chomp.downcase
-      if input.empty? || input == 'y'
+
+      input = $stdin.gets.chomp.downcase
+      if input.empty? || input == "y"
         system_command "/usr/bin/sudo",
-                      args: [xattr_path, "-r", "-d", "com.apple.quarantine", app_path],
-                      sudo: true
+                       args: [xattr_path, "-r", "-d", "com.apple.quarantine", app_path],
+                       sudo: true
         puts "\n✅ Successfully removed quarantine attribute."
         puts "You can now launch the application normally."
       else
