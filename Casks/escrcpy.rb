@@ -16,7 +16,7 @@ cask "escrcpy" do
     strategy :github_latest
   end
 
-  auto_updates true
+  auto_updates false
   depends_on macos: ">= :catalina"
 
   app "Escrcpy.app"
