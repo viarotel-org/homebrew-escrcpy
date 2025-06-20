@@ -1,9 +1,9 @@
 cask "escrcpy" do
   arch arm: "arm64", intel: "x64"
 
-  version "1.29.7"
-  sha256 arm:   "1e6e5e2b722b85c2b97cec35356e3cab4db2d302be1ff37ad733b6982560d65d",
-         intel: "1e6e5e2b722b85c2b97cec35356e3cab4db2d302be1ff37ad733b6982560d65d"
+  version "1.29.8"
+  sha256 arm:   "f9d9889e0c5cb3e3eecbe19f4735af6bcbb21fa2f7f8d970d294b186f7a2fcba",
+         intel: "f9d9889e0c5cb3e3eecbe19f4735af6bcbb21fa2f7f8d970d294b186f7a2fcba"
 
   url "https://github.com/viarotel-org/escrcpy/releases/download/v#{version}/Escrcpy-#{version}-mac-#{arch}.dmg"
   name "Escrcpy"
