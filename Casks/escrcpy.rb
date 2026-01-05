@@ -12,7 +12,7 @@ cask "escrcpy" do
 
   livecheck do
     url :homepage
-    regex(/^v?(\d+(?:\.\d+)+)$/i)
+    regex(/^workspace-v(\d+(?:\.\d+)+)$/i)
     strategy :github_latest
   end
 
