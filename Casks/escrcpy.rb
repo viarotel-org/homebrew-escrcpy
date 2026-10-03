@@ -17,45 +17,16 @@ cask "escrcpy" do
   end
 
   auto_updates false
-  depends_on macos: :catalina
+  depends_on :macos
 
   app "Escrcpy.app"
 
-  postflight do
-    app_path = "/Applications/Escrcpy.app"
-
-    unless File.exist?(app_path)
-      opoo "Application not found at #{app_path}"
-      return
-    end
-
-    xattr_path = `which xattr`.chomp
-    quarantine_status = system_command(xattr_path,
-                                       args:         ["-l", app_path],
-                                       print_stderr: false).stdout
-    if quarantine_status.include?("com.apple.quarantine")
-      puts "\n============================================="
-      puts "Would you like to remove the quarantine attribute to fix the app damage issue?"
-      puts "This will prevent the 'app is damaged' warning."
-      puts "Enter 'Y' or press Enter to proceed, 'n' to skip"
-      puts "============================================="
-
-      input = $stdin.gets.chomp.downcase
-      if input.empty? || input == "y"
-        system_command "/usr/bin/sudo",
-                       args: [xattr_path, "-r", "-d", "com.apple.quarantine", app_path],
-                       sudo: true
-        puts "\n✅ Successfully removed quarantine attribute."
-        puts "You can now launch the application normally."
-      else
-        puts "\n⏭️  Skipped removing quarantine attribute."
-        puts "You may need to right-click the app and select 'Open' for first launch."
-      end
-    else
-      puts "\n✨ Quarantine attribute is not present. No action needed."
-    end
-  rescue => e
-    opoo "Error during postflight: #{e.message}"
+  postflight_steps do
+    # Strip the quarantine attribute so the app is not reported as damaged on first launch.
+    # `xattr -d` exits 0 when the attribute is already absent, so this is a no-op on
+    # subsequent runs and needs neither sudo nor an interactive prompt.
+    run "/usr/bin/xattr",
+        args: ["-r", "-d", "com.apple.quarantine", "/Applications/Escrcpy.app"]
   end
 
   uninstall quit: "org.viarotel.escrcpy"
@@ -72,5 +43,6 @@ cask "escrcpy" do
     2. In some cases you may need to manually install scrcpy to resolve compatibility issues
     3. Make sure USB debugging is enabled on your Android device.
     4. For wireless connection, your device needs to be on the same network.
+    5. Recent Homebrew versions require `brew trust viarotel-org/escrcpy` before installing.
   EOS
 end
