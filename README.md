@@ -7,8 +7,13 @@ Distributing escrcpy via homebrew
 
 ### Add an escrcpy repository
 
+
+### Trust the tap
+
+Recent Homebrew versions refuse to install casks from untrusted taps.
+
 ```shell
-brew tap viarotel-org/escrcpy
+brew trust viarotel-org/escrcpy
 ```
 
 ### Install escrcpy
